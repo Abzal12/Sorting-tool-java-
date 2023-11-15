@@ -1,15 +1,50 @@
 package sorting;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
+        List<String> stringListSortingType = List.of("natural", "byCount");
+        for (int i = 0; i < args.length; i++) {
+
+            if (args[i].equals("-sortingType")) {
+                if (i + 1 > args.length - 1 || !stringListSortingType.contains(args[i + 1])) {
+
+                    System.out.println("No sorting type defined!");
+                    return;
+                }
+            }
+        }
+
+        List<String> stringListDataType = List.of("long", "word", "line");
+        for (int i = 0; i < args.length; i++) {
+
+            if (args[i].equals("-dataType")) {
+                if (i + 1 > args.length - 1 || !stringListDataType.contains(args[i + 1])) {
+
+                    System.out.println("No data type defined!");
+                    return;
+                }
+            }
+        }
+
+        List<String> arrayListAllArgs = List.of("-sortingType", "natural", "byCount", "-dataType", "long", "word", "line");
+        boolean mistake = false;
+        for (String arg : args) {
+            if (!arrayListAllArgs.contains(arg)) {
+                System.out.println('"' + arg + '"' + " is not a valid parameter. It will be skipped");
+                mistake = true;
+            }
+        }
+        if (mistake) {
+            return;
+        }
+
         Scanner scanner = new Scanner(System.in);
 
-        // if the -sortingType argument is provided, it should be followed by natural or byCount,
-        // which defines the sorting type.
         if ((Arrays.asList(args).contains("-sortingType") && Arrays.asList(args).contains("natural"))
                 || args[0].equals("-dataType")) {
 
