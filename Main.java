@@ -1,20 +1,54 @@
 package sorting;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        boolean isInput = false;
+        boolean isOutput = false;
+        for (String arg : args) {
+
+            if (arg.equals("-inputFile")) {
+
+                isInput = true;
+            }
+            if (arg.equals("-outputFile")) {
+
+                isOutput = true;
+            }
+        }
+        Scanner scanner = new Scanner(System.in);
+        FileWriter writer = null;
+
+        if (isInput) {
+            File file = new File(args[Arrays.asList(args).indexOf("-inputFile")] + 1);
+            scanner = new Scanner(file);
+        }
+
+        if(isOutput) {
+            File file = new File(args[Arrays.asList(args).indexOf("-outputFile")] + 1);
+            writer = new FileWriter(file);
+        }
 
         List<String> stringListSortingType = List.of("natural", "byCount");
         for (int i = 0; i < args.length; i++) {
 
             if (args[i].equals("-sortingType")) {
                 if (i + 1 > args.length - 1 || !stringListSortingType.contains(args[i + 1])) {
+                    if (isOutput) {
+                        writer.write("No sorting type defined!");
+                        return;
+                    }
 
                     System.out.println("No sorting type defined!");
                     return;
+
                 }
             }
         }
@@ -24,7 +58,9 @@ public class Main {
 
             if (args[i].equals("-dataType")) {
                 if (i + 1 > args.length - 1 || !stringListDataType.contains(args[i + 1])) {
-
+                    if (isOutput) {
+                        writer.write("No data type defined!");
+                    }
                     System.out.println("No data type defined!");
                     return;
                 }
@@ -35,15 +71,18 @@ public class Main {
         boolean mistake = false;
         for (String arg : args) {
             if (!arrayListAllArgs.contains(arg)) {
-                System.out.println('"' + arg + '"' + " is not a valid parameter. It will be skipped");
+                if (isOutput) {
+                    writer.append(String.valueOf('"')).append(arg).append(String.valueOf('"')).append(" is not a valid parameter. It will be skipped");
+                } else {
+
+                    System.out.println('"' + arg + '"' + " is not a valid parameter. It will be skipped");
+                }
                 mistake = true;
             }
         }
         if (mistake) {
             return;
         }
-
-        Scanner scanner = new Scanner(System.in);
 
         if ((Arrays.asList(args).contains("-sortingType") && Arrays.asList(args).contains("natural"))
                 || args[0].equals("-dataType")) {
@@ -164,6 +203,13 @@ public class Main {
                             (Integer.parseInt(stringClass.getCounter()) * 100) / stringList.size() + "%");
                 }
             }
+        }
+        if (isInput) {
+            scanner.close();
+        }
+
+        if (isOutput) {
+            writer.close();
         }
     }
 }
